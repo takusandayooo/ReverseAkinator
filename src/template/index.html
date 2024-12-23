@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AIが考えているものを当てよう！！</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to bottom right, #1e3c72, #2a5298);
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+      h2 {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+      }
+      input[type="file"] {
+        background: #fff;
+        color: #333;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+      input[type="file"]:hover {
+        background: #ddd;
+      }
+      button {
+        background: #00c853;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      button:hover {
+        background: #00a844;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>AIが考えているものを当てよう！！</h1>
+      <h2>オプションでcsvファイルをアップロードできます。<br>デフォルトは、プログラミング言語を当てるようになっています。</h2>
+      <input id="upload-file" type="file" />
+      <br />
+      <button id="process-file">決定</button>
+    </div>
+
+    <script>
+      const input = document.getElementById("upload-file");
+      const button = document.getElementById("process-file");
+      let fileContent = "";
+
+      // FileReaderの定義
+      const reader = new FileReader();
+      input.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        // ファイルの種類を絞る
+        if (file.type === "text/csv") {
+          reader.onload = () => {
+            fileContent = reader.result;
+          };
+          reader.readAsText(file);
+        } else {
+          alert("csvファイルを選択してください。");
+        }
+      });
+
+      button.addEventListener("click", () => {
+        if (fileContent) {
+          const lines = fileContent.split("\n");
+          const randomIndex = Math.floor(Math.random() * lines.length);
+          const answer = lines[randomIndex];
+          sessionStorage.clear();
+          sessionStorage.setItem("answer", answer);
+        } else {
+          sessionStorage.clear();
+          const defaultAnswer =["Python", "JavaScript", "Java", "C Sharp", "C++","HTML5", "Cascading Style Sheets", "Ruby", "PHP (プログラミング言語)", "Swift (プログラミング言語)", "Go (プログラミング言語)", "R言語", "TypeScript", "SQL"]
+          const randomIndex = Math.floor(Math.random() * defaultAnswer.length);
+          const answer = defaultAnswer[randomIndex];
+          sessionStorage.setItem("answer", answer);
+        }
+        window.location.href = "/akinator";
+      });
+    </script>
+  </body>
+</html>
